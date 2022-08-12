@@ -1,0 +1,38 @@
+version: '3'
+services:
+  app:
+    image: spring_application:latest
+    container_name: spring_application
+    depends_on:
+      - postgres
+      - flyway
+    ports:
+    - "8081:8081"
+    environment:
+    - Hostname=${Hostname} #this is hostname for postgres container siting in the docker network
+    - Port=${Port} # container database port
+    - DBName=${DBName}
+    - Schema=${Schema}
+    - Username=${Username}
+    - Password=${Password}
+    - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+  flyway:
+    image: flyway:latest
+    container_name: flyway
+    environment:
+    - FLYWAY_URL=jdbc:postgresql://${Hostname}:${Port}/${DBName}
+    - FLYWAY_USER=${Username}
+    - FLYWAY_PASSWORD=${Password}
+    - FLYWAY_SCHEMAS=${Schema}
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres_database:latest
+    container_name: postgres_database
+    restart: always
+    ports:
+    - "8001:5432" # localhost:container
+    environment:
+    - POSTGRES_USER=${Username}
+    - POSTGRES_PASSWORD=${Password}
+    - POSTGRES_DB=${DBName}
