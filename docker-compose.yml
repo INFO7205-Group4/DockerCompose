@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: spring_application:latest
+    image: info7205group4/app:springboot_application
     container_name: spring_application
     depends_on:
       - postgres
@@ -17,7 +17,7 @@ services:
     - Password=${Password}
     - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
   flyway:
-    image: flyway:latest
+    image: info7205group4/db:flyway_migration
     container_name: flyway
     environment:
     - FLYWAY_URL=jdbc:postgresql://${Hostname}:${Port}/${DBName}
@@ -27,7 +27,7 @@ services:
     depends_on:
       - postgres
   postgres:
-    image: postgres_database:latest
+    image: info7205group4/db:postgres_migration
     container_name: postgres_database
     restart: always
     ports:
